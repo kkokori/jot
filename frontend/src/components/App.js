@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import Login from './Login';
 import NavBar from './NavBar';
+import Home from './Home';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -11,7 +12,7 @@ class App extends Component
     {
         super(props);
         this.state = {
-            validUser: false,
+            validUser: true,
         };
     }
 
@@ -19,22 +20,20 @@ class App extends Component
     {
         if (this.state.validUser)
             return (
-                <Grid container alignContent='center' justify='center'
-                    alignItems='center' direction='column' spacing={ 4 }>
+                <Grid container className='app-container' alignContent='center'
+                    justify='center' alignItems='center' direction='row'>
                     <Grid className='navbar-container' item sm={ 12 }>
-                        <NavBar validated={ this.state.validUser } />
+                        <NavBar disableGutters validated={ this.state.validUser } />
                     </Grid>
-                    <Grid className='main-container' item sm={ 12 }>
-                        Note previews go here!
-                    </Grid>
+                    <Home />
                 </Grid>
             );
         else
             return (
-                <Grid container alignContent='center' justify='center'
-                    alignItems='center' direction='column' spacing={ 4 }>
+                <Grid container className='app-container' alignContent='center'
+                    justify='center' alignItems='center' direction='column'>
                     <Grid className='navbar-container' item sm={ 12 }>
-                        <NavBar validated={ this.state.validUser } />
+                        <NavBar disableGutters validated={ this.state.validUser } />
                     </Grid>
                     <Grid className='login-container' item sm={ 12 }>
                         <Login />

@@ -1,12 +1,103 @@
+html {
+    height: 100vh;
+}
 body {
     margin:0;
     font-family: sans-serif;
+    height: 100vh;
+}
+.app-container {
+    height: 100vh;
 }
 
 .navbar-container {
-    width: 100%;   
+    z-index: 999;
+    width: 100%;
 }
 .navbar {
     background-color: cornflowerblue;
 }
+.nav-icon {
+    height: 100%;
+    padding-right: 10px;
+}
 
+.login-container {
+    margin: auto auto;
+}
+.login-fields {
+    display: block;
+    margin: 20px;
+}
+.login-fields input {
+    margin: 10px;
+}
+.login-button {
+    position: relative;
+    float: left;
+}
+.register-button {
+    height: 10%;
+    position: static;
+    float: right;
+    vertical-align: bottom;
+}
+
+.home-container {
+    height: 89%;
+    position: relative
+}
+
+.config-container {
+    height: 100%;
+    width: 25%;
+    position: relative;
+}
+
+.notes-thumb-container {
+    text-align: center;
+    overflow: auto;
+    height: 100%;
+    width: 50%;
+    position: relative;
+    background-color: rgb(202, 219, 255);
+}
+.notes-thumb-list {
+    height: 100%;
+    text-align: center;
+}
+.note-thumb-container {
+    padding: 1% !important;
+    height: 20%;
+    width: 100%;
+}
+.note-thumb {
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+.note-thumb-title {
+    display: block;
+    height: 40%;
+}
+.note-thumb-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    display: block;
+    height: 20%;
+    padding: 5% !important;
+    padding-bottom: 0 !important;
+}
+.note-thumb-snippet {
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    height: 100%;
+}
+.note-thumb-tag {
+    color: gray;
+    position: relative;
+    padding-right: 1%;
+    float: right;
+}

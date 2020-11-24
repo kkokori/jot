@@ -15,9 +15,11 @@ class NavBar extends Component
             return (
                 <AppBar position='static'>
                     <Toolbar className='navbar'>
-                        <IconButton>
-                            <MenuIcon />
-                        </IconButton>
+                        <div className="nav-icon">
+                            <IconButton>
+                                <MenuIcon />
+                            </IconButton>
+                        </div>
                         <h1>Jot.</h1>
                     </Toolbar>
                 </AppBar>
@@ -26,7 +28,9 @@ class NavBar extends Component
             return (
                 <AppBar position='static'>
                     <Toolbar className='navbar'>
-                        <CreateIcon />
+                        <div className="nav-icon">
+                            <CreateIcon />
+                        </div>
                         <h1>Jot.</h1>
                     </Toolbar>
                 </AppBar>
