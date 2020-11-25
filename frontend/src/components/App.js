@@ -18,20 +18,25 @@ class App extends Component
 
     render()
     {
-        if (this.state.validUser)
-            return (
-                <Grid container className='app-container' alignContent='center'
-                    justify='center' alignItems='center' direction='row'>
-                    <Grid className='navbar-container' item sm={ 12 }>
-                        <NavBar disableGutters validated={ this.state.validUser } />
-                    </Grid>
-                    <Home />
+        const content = this.state.validUser ? <Home /> : <Login />
+    
+        return (
+            <Grid container className='app-container' alignContent='center'
+                justify='center' alignItems='center'>
+                <Grid className='navbar-container' item sm={ 12 }>
+                    <NavBar disableGutters validated={ this.state.validUser } />
                 </Grid>
-            );
-        else
-            return (
-                <Grid container className='app-container' alignContent='center'
-                    justify='center' alignItems='center' direction='column'>
+                { content }
+            </Grid>
+        );
+    }
+}
+
+/*
+   else
+    return(
+                <Grid container className = 'app-container' alignContent = 'center'
+                    justify = 'center' alignItems = 'center' direction = 'column' >
                     <Grid className='navbar-container' item sm={ 12 }>
                         <NavBar disableGutters validated={ this.state.validUser } />
                     </Grid>
@@ -40,7 +45,6 @@ class App extends Component
                     </Grid>
                 </Grid>
             );
-    }
-}
+            */
 
 export default App;

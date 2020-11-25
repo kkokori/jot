@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 
 import CreateIcon from '@material-ui/icons/Create';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -31,7 +32,9 @@ class NavBar extends Component
                         <div className="nav-icon">
                             <CreateIcon />
                         </div>
-                        <h1>Jot.</h1>
+                        <Typography variant="h1">
+                            Jot.
+                            </Typography>
                     </Toolbar>
                 </AppBar>
             );

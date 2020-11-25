@@ -19,10 +19,11 @@ class NoteThumb extends Component
         if (this.props.note.title.length > 40)
             title += "..."
 
+        
         return (
-            <ListItem disableGutters className="note-thumb-container" onClick={ () => console.log("you clicked " + this.props.note.title) }>
+            <ListItem selected={ this.props.note.selected } disableGutters className="note-thumb-container">
                 <Card className="note-thumb">
-                    <CardActionArea className="note-thumb">
+                    <CardActionArea onClick={ () => this.props.handleClickNote(this.props.note) } className="note-thumb">
                         <div className="note-thumb-title">
                             <CardHeader title={ title } titleTypographyProps={ { variant: "h6" } } subheader={ this.props.note.date } subheaderTypographyProps={ { variant: "caption" } } />
                         </div>
