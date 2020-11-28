@@ -113,6 +113,7 @@ class App extends Component
         let id = this.state.currentID;
         let newNote =
         {
+            visible: true,
             id: id,
             title: "Untitled",
             content: "",
