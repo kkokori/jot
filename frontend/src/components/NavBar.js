@@ -35,7 +35,7 @@ class NavBar extends Component
         return (
             <AppBar position='static'>
                 <Toolbar className='navbar'>
-                    <IconButton fontSize='large' edge='start'>
+                    <IconButton fontSize='large' edge='start' onClick={ () => this.props.openMenu() }>
                         { icon }
                     </IconButton>
                     <Typography className='nav-title' variant='h3'>

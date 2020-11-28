@@ -14,7 +14,7 @@ body {
     z-index: 999;
     width: 100%;
 }
-.navbar {
+.navbar, .user-menu-navbar {
     background-color: cornflowerblue;
 }
 .nav-title {
@@ -28,6 +28,20 @@ body {
     margin-right: 15px;
     width: 150px;
 }
+
+.user-menu-container {
+    padding-right: 10px;
+}
+.user-menu-drawer {
+    width: 30%;
+}
+.user-menu-navbar {
+    padding: 7px;
+}
+.user-settings-menu {
+    padding-right: 50px;
+}
+
 
 .login-container {
     height: 89%;
@@ -104,10 +118,6 @@ body {
 }
 .note-thumb-tag {
     color: gray;
- /*   position: relative;
-    padding-right: 1%;
-    float: right;
-    */
 }
 
 .preview-container {

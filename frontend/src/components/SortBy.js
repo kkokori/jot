@@ -30,7 +30,7 @@ class SortBy extends Component
     render()
     {
         return (
-            <FormControl variant='contained' >
+            <FormControl variant='filled' >
                 <InputLabel id='sort-label'>Sort by</InputLabel>
                 <Select className='sort' labelId='sort-label' id='sort' autoWidth value={ this.state.selectedSort }
                     label='Sort by' onChange={ (e) => this.handleSelectSort(e.target.value) }>

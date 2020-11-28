@@ -40,7 +40,7 @@ class FilterTags extends Component
     render()
     {
         return (
-            <FormControl variant='outlined' multiple>
+            <FormControl variant='filled' multiple>
                 <InputLabel id='tag-filter-label'>Filter by Tag</InputLabel>
                 <Select className='tag-filter' labelId='tag-filter-label' id='tag-filter' autoWidth value={ this.state.selectedTags }
                     label='Filter by Tag' renderValue={ (selected) => { return selected.join(", "); } }

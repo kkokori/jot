@@ -4,7 +4,9 @@ import Moment from 'moment';
 import Login from './Login';
 import NavBar from './NavBar';
 import Home from './Home';
+import UserMenu from './UserMenu';
 
+import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 
 class App extends Component
@@ -20,6 +22,7 @@ class App extends Component
             selectedNote: null,
             editing: false,
             currentID: 6,
+            openMenu: false,
             tags: ["Grocery", "Important", "Passwords", "To-Do"],
             notes: [
                 {
@@ -73,6 +76,12 @@ class App extends Component
 
     handleClickNote = (note) =>
     {
+        if (this.state.selectedNote !== null && this.state.selectedNote.title === "")
+        {
+            alert("You must give this note a title!");
+            return;
+        }
+
         let notes = this.state.notes.map(n =>
         {
             // turn off currently selected
@@ -115,7 +124,7 @@ class App extends Component
         {
             visible: true,
             id: id,
-            title: "Untitled",
+            title: "",
             content: "",
             date: Moment(),
             tag: "",
@@ -242,19 +251,33 @@ class App extends Component
         });
     }
 
+    handleMenuOpen = () =>
+    {
+        this.setState({
+            openMenu: !this.state.openMenu,
+        });
+    }
+
     render()
     {
+        const drawer = this.state.validUser ? (
+            <Drawer className='user-menu-drawer' anchor='left' open={ this.state.openMenu } variant='temporary' elevation={ 0 }
+                ModalProps={ { onBackdropClick: this.handleMenuOpen, } }>
+                <UserMenu openMenu={ this.handleMenuOpen } />
+            </Drawer>
+        ) : null;
         const content = this.state.validUser ?
             <Home handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote } editTitle={ this.editTitle }
                 editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } selectedNote={ this.state.selectedNote } />
-            : <Login />
+            : <Login />;
 
         return (
             <Grid container className='app-container' justify='center' alignItems='center'>
                 <Grid className='navbar-container' item sm={ 12 }>
+                    { drawer }
                     <NavBar validated={ this.state.validUser } notes={ this.props.notes } note={ this.state.selectedNote }
                         tags={ this.state.tags } newNote={ this.newNote } editTag={ this.editTag } filterTags={ this.filterTags }
-                        sortNotes={ this.sortNotes } />
+                        sortNotes={ this.sortNotes } openMenu={ this.handleMenuOpen } />
                 </Grid>
                 { content }
             </Grid>

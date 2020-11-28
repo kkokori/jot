@@ -30,7 +30,7 @@ class AddTags extends Component
     {
         const tag = this.props.note !== null ? this.props.note.tag : "";
         return (
-            <FormControl variant='outlined' disabled={ this.state.disabledTags } >
+            <FormControl variant='filled' disabled={ this.state.disabledTags } >
                 <InputLabel id='tag-select-label'>Change Tag</InputLabel>
                 <Select className='tag-select' labelId='tag-select-label' id='tag-select' autoWidth value={ tag }
                     label='Change Tag' onChange={ (e) => this.props.editTag(e.target.value, this.props.note) }>

@@ -56,8 +56,8 @@ class NoteDetail extends Component
             content = <TextField className="note-content" multiline variant="outlined" rows={ 26 } rowsMax={ 26 }
                 value={ this.props.note.content } onChange={ (e) => this.props.editNote(e.target.value, this.props.note) } />
 
-            title = this.state.editTitle ?
-                <TextField className="note-title" id={ "note-" + this.props.id + "-title" } value={ this.props.note.title }
+            title = (this.state.editTitle || this.props.note.title == "") ?
+                <TextField required className="note-title" id={ "note-" + this.props.id + "-title" } value={ this.props.note.title }
                     onChange={ (e) => this.props.editTitle(e.target.value, this.props.note) } onKeyDown={ (e) => this.saveTitle(e) } />
                 : this.props.note.title;
 
