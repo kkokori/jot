@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import AddTags from './AddTags';
 import FilterTags from './FilterTags';
+import SortBy from './SortBy';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -21,6 +22,7 @@ class NavBar extends Component
         const control = this.props.validated ?
             (
                 <div className='nav-controls'>
+                    <SortBy notes={ this.props.notes } sortNotes={ this.props.sortNotes } />
                     <FilterTags filterTags={ this.props.filterTags } tags={ this.props.tags } note={ this.props.note } />
                     <AddTags editTag={ this.props.editTag } tags={ this.props.tags } note={ this.props.note }/>
                     <Button disableElevation size='large' variant='contained'

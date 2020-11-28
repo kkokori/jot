@@ -25,7 +25,7 @@ class App extends Component
                 {
                     visible: true,
                     id: 1,
-                    title: "Note 1",
+                    title: "Okay bb",
                     content: "random dshsahjkghj",
                     date: date,
                     tag: "Grocery",
@@ -34,7 +34,7 @@ class App extends Component
                 {
                     visible: true,
                     id: 2,
-                    title: "Note 2",
+                    title: "I wanna die",
                     content: "hsajkjkah dshsahjkghj",
                     date: date,
                     tag: "",
@@ -43,7 +43,7 @@ class App extends Component
                 {
                     visible: true,
                     id: 3,
-                    title: "Note 4",
+                    title: "Note",
                     content: "I need to work on the stupid database stuff omg lolol",
                     date: date,
                     tag: "To-Do",
@@ -52,7 +52,7 @@ class App extends Component
                 {
                     visible: true,
                     id: 4,
-                    title: "Note 5",
+                    title: "hello",
                     content: "the mooooooooooooooooooooooooooooooooooodddd is weird because hgjskgdhakhakaahljkhagdlasbnhdksabhlbdfgkjabdhkl",
                     date: date,
                     tag: "Important",
@@ -205,7 +205,38 @@ class App extends Component
                     n.visible = false;
                 return n;
             })
-        
+
+        this.setState({
+            notes: notes,
+        });
+    }
+
+    sortNotes = (sort) =>
+    {
+        let notes = this.state.notes;
+        console.log(sort);
+        if (sort === "Date (oldest first)")
+            notes.sort((m, n) =>
+            {
+                return m.date.diff(n.date);
+            });
+        else if (sort === "Date (most recent)")
+            notes.sort((m, n) =>
+            {
+                return n.date.diff(m.date);
+            });
+        else if (sort === "Title (ascending)")
+            notes.sort((m, n) =>
+            {
+                return m.title.toLowerCase().localeCompare(n.title.toLowerCase());
+            });
+        else if (sort === "Title (descending)")
+            notes.sort((m, n) =>
+            {
+                console.log(n.title.toLowerCase().localeCompare(m.title.toLowerCase()));
+                return n.title.toLowerCase().localeCompare(m.title.toLowerCase());
+            });
+
         this.setState({
             notes: notes,
         });
@@ -221,8 +252,9 @@ class App extends Component
         return (
             <Grid container className='app-container' justify='center' alignItems='center'>
                 <Grid className='navbar-container' item sm={ 12 }>
-                    <NavBar tags={ this.state.tags } note={ this.state.selectedNote } validated={ this.state.validUser }
-                        newNote={ this.newNote } editTag={ this.editTag } filterTags={ this.filterTags } />
+                    <NavBar validated={ this.state.validUser } notes={ this.props.notes } note={ this.state.selectedNote }
+                        tags={ this.state.tags } newNote={ this.newNote } editTag={ this.editTag } filterTags={ this.filterTags }
+                        sortNotes={ this.sortNotes } />
                 </Grid>
                 { content }
             </Grid>

@@ -24,7 +24,7 @@ body {
     display: flex;
     padding: 10px;
 }
-.tag-select, .tag-filter {
+.tag-select, .tag-filter, .sort {
     margin-right: 15px;
     width: 150px;
 }
@@ -53,7 +53,7 @@ body {
 }
 
 .home-container {
-    height: 91%;
+    height: 89%;
     position: relative;
 }
 

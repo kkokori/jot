@@ -43,7 +43,7 @@ class FilterTags extends Component
             <FormControl variant='outlined' multiple>
                 <InputLabel id='tag-filter-label'>Filter by Tag</InputLabel>
                 <Select className='tag-filter' labelId='tag-filter-label' id='tag-filter' autoWidth value={ this.state.selectedTags }
-                    label='Filter by Tag' input={ <Input /> } renderValue={ (selected) => { return selected.join(", "); } }
+                    label='Filter by Tag' renderValue={ (selected) => { return selected.join(", "); } }
                     onChange={ (e) => this.handleSelectTag(e.target.value) }>
                     { this.props.tags.map(t =>
                     {
