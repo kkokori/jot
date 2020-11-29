@@ -32,9 +32,6 @@ body {
 .user-menu-container {
     padding-right: 10px;
 }
-.user-menu-drawer {
-    width: 30%;
-}
 .user-menu-navbar {
     padding: 7px;
 }
@@ -42,6 +39,19 @@ body {
     padding-right: 50px;
 }
 
+.change-pass-container {
+    background-color: white;
+    width: 30%;
+    height: 50%;
+    margin: auto;
+    border-radius: 15px;
+    text-align: center;
+    padding-top: 10%;
+}
+.change-pass-button-container .MuiButton-contained {
+    background-color: cornflowerblue !important;
+    color: white !important;
+}
 
 .login-container {
     height: 89%;

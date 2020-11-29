@@ -114,6 +114,12 @@ class App extends Component
 
     newNote = () =>
     {
+        if (this.state.selectedNote !== null && this.state.selectedNote.title === "")
+        {
+            alert("You must give this note a title!");
+            return;
+        }
+        
         let notes = this.state.notes.map(n =>
         {
             n.selected = false;
@@ -260,12 +266,6 @@ class App extends Component
 
     render()
     {
-        const drawer = this.state.validUser ? (
-            <Drawer className='user-menu-drawer' anchor='left' open={ this.state.openMenu } variant='temporary' elevation={ 0 }
-                ModalProps={ { onBackdropClick: this.handleMenuOpen, } }>
-                <UserMenu openMenu={ this.handleMenuOpen } />
-            </Drawer>
-        ) : null;
         const content = this.state.validUser ?
             <Home handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote } editTitle={ this.editTitle }
                 editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } selectedNote={ this.state.selectedNote } />
@@ -274,7 +274,7 @@ class App extends Component
         return (
             <Grid container className='app-container' justify='center' alignItems='center'>
                 <Grid className='navbar-container' item sm={ 12 }>
-                    { drawer }
+                    <UserMenu handleMenuOpen={ this.handleMenuOpen } openMenu={ this.state.openMenu } />
                     <NavBar validated={ this.state.validUser } notes={ this.props.notes } note={ this.state.selectedNote }
                         tags={ this.state.tags } newNote={ this.newNote } editTag={ this.editTag } filterTags={ this.filterTags }
                         sortNotes={ this.sortNotes } openMenu={ this.handleMenuOpen } />
@@ -284,20 +284,5 @@ class App extends Component
         );
     }
 }
-
-/*
-   else
-    return(
-                <Grid container className = 'app-container' alignContent = 'center'
-                    justify = 'center' alignItems = 'center' direction = 'column' >
-                    <Grid className='navbar-container' item sm={ 12 }>
-                        <NavBar disableGutters validated={ this.state.validUser } />
-                    </Grid>
-                    <Grid className='login-container' item sm={ 12 }>
-                        <Login />
-                    </Grid>
-                </Grid>
-            );
-            */
 
 export default App;

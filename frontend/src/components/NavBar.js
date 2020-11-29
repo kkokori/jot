@@ -25,7 +25,7 @@ class NavBar extends Component
                     <SortBy notes={ this.props.notes } sortNotes={ this.props.sortNotes } />
                     <FilterTags filterTags={ this.props.filterTags } tags={ this.props.tags } note={ this.props.note } />
                     <AddTags editTag={ this.props.editTag } tags={ this.props.tags } note={ this.props.note }/>
-                    <Button disableElevation size='large' variant='contained'
+                    <Button disableElevation size='large' variant='contained' color='default'
                         edge='end' endIcon={ <AddCircleIcon /> } onClick={ this.props.newNote }>
                         New Note
                     </Button>
