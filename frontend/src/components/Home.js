@@ -10,7 +10,37 @@ import Divider from '@material-ui/core/Divider';
 
 class Home extends Component
 {
-    render() 
+
+    componentDidMount()
+    {
+        fetch('/api/notes/',
+            {
+                withCredentials: true,
+                credentials: 'include',
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token' + this.props.token,
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+            .then(res => res.json())
+            .then(
+                (result) =>
+                {
+                    console.log(result.results)
+                    this.props.handleLoadNotes(result.results);
+                    //handleEmployeeLoadSuccess(result.results);
+                },
+                (error) =>
+                {
+                    console.log(error);  // error handling
+                }
+            );
+    }
+
+
+    render()
     {
         const noteList = (this.props.notes.length > 0 && this.props.notes[0]) ?
             this.props.notes.filter((n) =>

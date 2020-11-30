@@ -6,6 +6,14 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import { Typography } from '@material-ui/core';
+
+
+const coreapi = require('coreapi')
+var client = new coreapi.Client();
+window.client = new coreapi.Client();
+window.loggedIn = false;
+
 
 class Login extends Component
 {
@@ -13,46 +21,42 @@ class Login extends Component
     {
         super(props);
         this.state = {
-            emailState: {
-                invalid: false,
-                text: "",
-            },
-            passState: {
-                invalid: false,
-                text: "",
-            },
-            data: [],
-            loaded: false,
-            placeholder: "Loading..."
+            registerMode: false,
+            error: false,
+            username: "",
+            email: "",
+            password: "",
         };
     }
 
-    /*  componentDidMount()
-      {
-          fetch("api/users")
-              .then(response =>
-              {
-                  if (response.status > 400)
-                  {
-                      return this.setState(() =>
-                      {
-                          return { placeholder: "Something went wrong!" };
-                      });
-                  }
-                  return response.json();
-              })
-              .then(data =>
-              {
-                  this.setState(() =>
-                  {
-                      return {
-                          data,
-                          loaded: true
-                      };
-                  });
-              });
-      }
-  */
+    componentDidMount()
+    {
+
+        fetch("api/users/")
+            .then(response =>
+            {
+                if (response.status > 400)
+                {
+                    return this.setState(() =>
+                    {
+                        return { placeholder: "Something went wrong!" };
+                    });
+                }
+                return response.json();
+            })
+            .then(data =>
+            {
+                this.setState(() =>
+                {
+                    return {
+                        data,
+                        loaded: true
+                    };
+                });
+            });
+
+    }
+
     checkIfUser = () => 
     {
         let email = document.getElementById("email-input").value;
@@ -72,29 +76,168 @@ class Login extends Component
         }
     }
 
+    handleEmailChange = (email) =>
+    {
+        this.setState({
+            email: email,
+        });
+    }
+    handlePassChange = (pass) =>
+    {
+        this.setState({
+            password: pass,
+        });
+    }
+    handleUsernameChange = (username) =>
+    {
+        this.setState({
+            username: username,
+        });
+    }
+    handleSubmitRegister = () =>
+    {
+        const data = {
+            email: this.state.email,
+            username: this.state.username,
+            password: this.state.password,
+        }
+      //  let res = fetch(api/users/"")
+        
+    }
+
+    handleSubmitLogin = () =>
+    {
+        const data = {
+            username: this.state.username,
+            password: this.state.password,
+        }
+        //const form = new FormData(document.getElementById('login-form'));
+        let res = fetch("api/token-auth/",
+            {
+                withCredentials: true,
+                credentials: 'include',
+                method: 'POST',
+                headers: {
+                    //'Authorization': 'Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response =>
+            {
+                if (response.status >= 400)
+                {
+                    this.setState({
+                        error: true,
+                    });
+                    return false;
+                }
+                else
+                    return response.json();
+            })
+            .then(data =>
+            {
+                if (data)
+                    this.props.handleLogin(data, this.state.username);
+            });
+    }
+
+
+    // Setup some globally accessible state
+    /*
+  
+      loginUser = (username, password) =>
+      {
+          let action = ["api-token-auth", "obtain-token"];
+          let params = { username: "example", email: "example@example.com" };
+          client.action(window.schema, ['api/users'], ).then(function (result)
+          {
+              // On success, instantiate an authenticated client.
+              let auth = window.coreapi.auth.TokenAuthentication({
+                  scheme: 'JWT',
+                  token: result['token'],
+              })
+              window.client = coreapi.Client({ auth: auth });
+              window.loggedIn = true;
+          }).catch(function (error)
+          {
+              // Handle error case where eg. user provides incorrect credentials.
+          })
+      }
+      */
+
     render()
     {
-        console.log(this.state.data)
+        const header = this.state.registerMode ? "Register for Jot." : "Login to Jot.";
+        const error = this.state.error ?
+            (<Typography variant="caption" className="error-message">
+                Your username or password is incorrect.
+                <br />
+                Please try again, or&nbsp;
+                <Button onClick={ () =>
+                {
+                    this.setState({
+                        registerMode: true,
+                    })
+                } } size="small">register</Button> if you do not have an account.
+            </Typography>) : "";
+
+        const form = this.state.registerMode ?
+            (
+                <div className="login-fields">
+                    <TextField required autoComplete="on" error={ this.state.error } value={ this.state.username }
+                        onChange={ (e) => this.handleUsernameChange(e.target.value) } id="username-input" placeholder="Username" type="text" />
+                    <br /><br />
+                    <TextField required autoComplete="on" error={ this.state.error } value={ this.state.email }
+                        onChange={ (e) => this.handleEmailChange(e.target.value) } id="email-input" placeholder="Email" type="email" />
+                    <br /><br />
+                    <TextField required error={ this.state.error } value={ this.state.password }
+                        onChange={ (e) => this.handlePassChange(e.target.value) } id="password-input" placeholder="Password" type="password" />
+                    <br /><br />
+                    <div className="login-button">
+                        <Button onClick={ () =>
+                        {
+                            this.setState({
+                                registerMode: false,
+                            })
+                        } } size="small"  >Back to Login</Button>
+                    </div>
+                    <div className="register-button">
+                        <Button variant="contained" size="small">Register</Button>
+                    </div>
+                </div>
+            )
+            :
+            (
+                <div className="login-fields">
+                    <TextField required autoComplete="on" error={ this.state.error } value={ this.state.username }
+                        onChange={ (e) => this.handleUsernameChange(e.target.value) } id="username-input" placeholder="Username" type="text" />
+                    <br /><br />
+                    <TextField required error={ this.state.error } value={ this.state.password }
+                        onChange={ (e) => this.handlePassChange(e.target.value) } id="password-input" placeholder="Password" type="password" />
+                    <br /><br />
+                    <div className="login-button">
+                        <Button variant="contained" size="small" onClick={ () => { this.handleSubmitLogin(); return false; } } >Login</Button>
+                    </div>
+                    <div className="register-button">
+                        <Button onClick={ () =>
+                        {
+                            this.setState({
+                                registerMode: true,
+                            })
+                        } } size="small">Register</Button>
+                    </div>
+                </div>
+            );
+
         return (
-            <Grid container item className='login-container' 
+            <Grid container item className='login-container'
                 justify='center' alignItems='center' direction='row'>
-                <Grid item>
-                    <form onSubmit={ () => { console.log("submitted") } } className="login-form">
-                        <h2>Login to Jot.</h2>
-                        <div className="login-fields">
-                            <TextField required autoComplete="on" error={ this.state.emailState.invalid }
-                                id="email-input" placeholder="Email" type="email" helperText={ this.state.emailState.text } />
-                            <br /><br />
-                            <TextField required error={ this.state.passState.invalid } helperText={ this.state.passState.text }
-                                id="password-input" placeholder="Password" type="password" />
-                            <br /><br />
-                            <div className="login-button">
-                                <Button color="primary" variant="contained" size="small" type="submit" onSubmit={ this.checkIfUser }>Login</Button>
-                            </div>
-                            <div className="register-button">
-                                <Link>Register</Link>
-                            </div>
-                        </div>
+                <Grid item className='login-form-container'>
+                    <form className="login-form" id="login-form">
+                        <h2>{ header }</h2>
+                        { error }
+                        { form }
                     </form>
                 </Grid>
             </Grid>

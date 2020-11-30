@@ -48,7 +48,8 @@ body {
     text-align: center;
     padding-top: 10%;
 }
-.change-pass-button-container .MuiButton-contained {
+.change-pass-button-container .MuiButton-contained, .login-button .MuiButton-contained 
+.register-button .MuiButton-contained {
     background-color: cornflowerblue !important;
     color: white !important;
 }
@@ -56,6 +57,9 @@ body {
 .login-container {
     height: 89%;
     text-align: center;
+}
+.login-form-container {
+    width: 20%;
 }
 .login-fields {
     text-align: center;
@@ -74,6 +78,9 @@ body {
     position: static;
     float: right;
     vertical-align: bottom;
+}
+.error-message {
+    color: red;
 }
 
 .home-container {

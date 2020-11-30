@@ -9,6 +9,19 @@ import UserMenu from './UserMenu';
 import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 
+/*
+The SessionAuthentication class allows session cookies to provide the user authentication. You'll want to provide a standard HTML login flow, to allow the user to login, and then instantiate a client using session authentication:
+
+let auth = new coreapi.auth.SessionAuthentication({
+    csrfCookieName: 'csrftoken',
+    csrfHeaderName: 'X-CSRFToken',
+});
+let client = new coreapi.Client({auth: auth});
+*/
+
+const coreapi = require('coreapi')
+var client = new coreapi.Client();
+
 class App extends Component
 {
     constructor(props)
@@ -18,7 +31,8 @@ class App extends Component
         let date = Moment();
         super(props);
         this.state = {
-            validUser: true,
+            token: "",
+            validUser: false,
             selectedNote: null,
             editing: false,
             currentID: 6,
@@ -74,6 +88,22 @@ class App extends Component
         };
     }
 
+    handleLogin = (token, username) =>
+    {
+        this.setState({
+            token: token,
+            validUser: true,
+            username: username,
+        });
+    }
+
+    handleLoadNotes = (notes) =>
+    {
+        this.setState({
+            notes: notes,
+        })
+    }
+
     handleClickNote = (note) =>
     {
         if (this.state.selectedNote !== null && this.state.selectedNote.title === "")
@@ -119,7 +149,7 @@ class App extends Component
             alert("You must give this note a title!");
             return;
         }
-        
+
         let notes = this.state.notes.map(n =>
         {
             n.selected = false;
@@ -137,6 +167,17 @@ class App extends Component
             selected: true,
         };
         notes.push(newNote);
+
+        // Here we've changed the action from "list" to "create", and additionally
+        // pass in the data we want to use. The rest is the same as above.
+        client.action(window.schema, ['api/notes', 'create'], newNote).then((result) =>
+        {
+            console.log(result);
+        }).catch((error) =>
+        {
+            alert.log(error);
+        });
+
 
         this.setState({
             selectedNote: newNote,
@@ -267,9 +308,9 @@ class App extends Component
     render()
     {
         const content = this.state.validUser ?
-            <Home handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote } editTitle={ this.editTitle }
-                editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } selectedNote={ this.state.selectedNote } />
-            : <Login />;
+            <Home handleLoadNotes={ this.handleLoadNotes } handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote } editTitle={ this.editTitle }
+                editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } selectedNote={ this.state.selectedNote } token={ this.props.token }/>
+            : <Login handleLogin={ this.handleLogin } />;
 
         return (
             <Grid container className='app-container' justify='center' alignItems='center'>

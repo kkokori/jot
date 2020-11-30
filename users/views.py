@@ -5,6 +5,16 @@ from users.serializers import UserSerializer
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
+"""
+def current_user(request):
+    
+    Determine the current user by their token, and return their data
+    
+
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+"""
+
 class UserCreate(APIView):
     """ 
     Creates the user. 
