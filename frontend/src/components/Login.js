@@ -26,6 +26,7 @@ class Login extends Component
             username: "",
             email: "",
             password: "",
+            errorMessage: "",
         };
     }
 
@@ -94,6 +95,7 @@ class Login extends Component
             username: username,
         });
     }
+
     handleSubmitRegister = () =>
     {
         const data = {
@@ -101,18 +103,9 @@ class Login extends Component
             username: this.state.username,
             password: this.state.password,
         }
-      //  let res = fetch(api/users/"")
-        
-    }
 
-    handleSubmitLogin = () =>
-    {
-        const data = {
-            username: this.state.username,
-            password: this.state.password,
-        }
-        //const form = new FormData(document.getElementById('login-form'));
-        let res = fetch("api/token-auth/",
+        console.log(data);
+        fetch("api/register/",
             {
                 withCredentials: true,
                 credentials: 'include',
@@ -128,6 +121,71 @@ class Login extends Component
                 if (response.status >= 400)
                 {
                     this.setState({
+                        errorMessage:
+                            <Typography variant="caption" className="error-message" >
+                                Something went wrong.We could not register your account.Please try again.
+                            </Typography>,
+                        error: true,
+                    });
+                    return false;
+                }
+                else
+                    return response.json();
+            })
+            .then(data =>
+            {
+                if (data)
+                {
+                    alert("Your account has been successfully registered. Try logging in.");
+                    this.setState({
+                        error: false,
+                        errorMessage: "",
+                        registerMode: false,
+                        email: "",
+                        username: "",
+                        password: "",
+                    });
+                }
+            });
+
+    }
+
+    handleSubmitLogin = () =>
+    {
+        const data = {
+            username: this.state.username,
+            password: this.state.password,
+        }
+        //const form = new FormData(document.getElementById('login-form'));
+        fetch("api/token-auth/",
+            {
+                withCredentials: true,
+                credentials: 'include',
+                method: 'POST',
+                headers: {
+                    //'Authorization': 'Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response =>
+            {
+                if (response.status >= 400)
+                {
+                    this.setState({
+                        errorMessage:
+                            <Typography variant="caption" className="error-message">
+                                Your username or password is incorrect.
+                                <br />
+                                Please try again, or&nbsp;
+                                <Button onClick={ () =>
+                                {
+                                    this.setState({
+                                        error: false,
+                                        registerMode: true,
+                                    })
+                                } } size="small">register</Button> if you do not have an account.
+                        </Typography>,
                         error: true,
                     });
                     return false;
@@ -169,18 +227,6 @@ class Login extends Component
     render()
     {
         const header = this.state.registerMode ? "Register for Jot." : "Login to Jot.";
-        const error = this.state.error ?
-            (<Typography variant="caption" className="error-message">
-                Your username or password is incorrect.
-                <br />
-                Please try again, or&nbsp;
-                <Button onClick={ () =>
-                {
-                    this.setState({
-                        registerMode: true,
-                    })
-                } } size="small">register</Button> if you do not have an account.
-            </Typography>) : "";
 
         const form = this.state.registerMode ?
             (
@@ -198,12 +244,13 @@ class Login extends Component
                         <Button onClick={ () =>
                         {
                             this.setState({
+                                error: false,
                                 registerMode: false,
                             })
                         } } size="small"  >Back to Login</Button>
                     </div>
                     <div className="register-button">
-                        <Button variant="contained" size="small">Register</Button>
+                        <Button onClick={ this.handleSubmitRegister } variant="contained" size="small">Register</Button>
                     </div>
                 </div>
             )
@@ -217,12 +264,13 @@ class Login extends Component
                         onChange={ (e) => this.handlePassChange(e.target.value) } id="password-input" placeholder="Password" type="password" />
                     <br /><br />
                     <div className="login-button">
-                        <Button variant="contained" size="small" onClick={ () => { this.handleSubmitLogin(); return false; } } >Login</Button>
+                        <Button variant="contained" size="small" onClick={ this.handleSubmitLogin } >Login</Button>
                     </div>
                     <div className="register-button">
                         <Button onClick={ () =>
                         {
                             this.setState({
+                                error: false,
                                 registerMode: true,
                             })
                         } } size="small">Register</Button>
@@ -236,7 +284,8 @@ class Login extends Component
                 <Grid item className='login-form-container'>
                     <form className="login-form" id="login-form">
                         <h2>{ header }</h2>
-                        { error }
+                        { this.state.errorMessage }
+                        { this.state.successfulRegistration }
                         { form }
                     </form>
                 </Grid>

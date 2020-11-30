@@ -97,6 +97,16 @@ class App extends Component
         });
     }
 
+    handleLogout = () =>
+    {
+        this.setState({
+            token: "",
+            validUser: false,
+            username: "",
+            openMenu: false,
+        });
+    }
+
     handleLoadNotes = (notes) =>
     {
         this.setState({
@@ -309,13 +319,14 @@ class App extends Component
     {
         const content = this.state.validUser ?
             <Home handleLoadNotes={ this.handleLoadNotes } handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote } editTitle={ this.editTitle }
-                editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } selectedNote={ this.state.selectedNote } token={ this.props.token }/>
+                editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } selectedNote={ this.state.selectedNote } token={ this.props.token } />
             : <Login handleLogin={ this.handleLogin } />;
 
         return (
             <Grid container className='app-container' justify='center' alignItems='center'>
                 <Grid className='navbar-container' item sm={ 12 }>
-                    <UserMenu handleMenuOpen={ this.handleMenuOpen } openMenu={ this.state.openMenu } />
+                    <UserMenu openMenu={ this.state.openMenu } username={ this.state.username }
+                        handleMenuOpen={ this.handleMenuOpen } handleLogout={ this.handleLogout } />
                     <NavBar validated={ this.state.validUser } notes={ this.props.notes } note={ this.state.selectedNote }
                         tags={ this.state.tags } newNote={ this.newNote } editTag={ this.editTag } filterTags={ this.filterTags }
                         sortNotes={ this.sortNotes } openMenu={ this.handleMenuOpen } />

@@ -70,7 +70,7 @@ class UserMenu extends Component
                         <List className='user-settings-menu'>
                             <ListItem>
                                 <Typography variant='button'>
-                                    Hi, User!
+                                    Hi, { this.props.username }!
                         </Typography>
                             </ListItem>
                             <ListItem button onClick={ this.openChangePass }>
@@ -79,12 +79,12 @@ class UserMenu extends Component
                                 </ListItemIcon>
                                 Change Password
                             </ListItem>
-                            <ListItem button>
+                            <ListItem button onClick={ this.props.handleLogout }>
                                 <ListItemIcon>
                                     <ExitToAppIcon />
                                 </ListItemIcon>
-                        Logout
-                </ListItem>
+                                Logout
+                            </ListItem>
                         </List>
                     </Grid>
                 </Grid>
