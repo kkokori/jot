@@ -14,7 +14,7 @@ class Note(models.Model):
         ('todo', 'To-Do'),
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                             related_name='notes')
+                             related_name='notes', default=None)
     title = models.CharField(max_length=50)
     content = models.TextField()
     tag = models.CharField(max_length=20, choices=TAG_CHOICES, default='none')

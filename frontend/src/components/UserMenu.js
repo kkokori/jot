@@ -8,7 +8,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
@@ -30,7 +29,6 @@ class UserMenu extends Component
 
     openChangePass = () =>
     {
-        console.log("lol");
         this.setState({
             passModalOpen: !this.state.passModalOpen,
         })
@@ -63,14 +61,14 @@ class UserMenu extends Component
                         </AppBar>
                     </Grid>
                     <Grid item>
-                        <Modal className='change-pass-container' open={ this.state.passModalOpen }
+                        <Modal className='change-pass-container' open={ this.state.passModalOpen } 
                             disableAutoFocus hideBackdrop onBackdropClick={ this.openChangePass }>
-                            <ChangePass />
+                            <ChangePass closeModal={ this.openChangePass } user={ this.props.user } />
                         </Modal>
                         <List className='user-settings-menu'>
                             <ListItem>
                                 <Typography variant='button'>
-                                    Hi, { this.props.username }!
+                                    Hi, { this.props.user.username }!
                         </Typography>
                             </ListItem>
                             <ListItem button onClick={ this.openChangePass }>

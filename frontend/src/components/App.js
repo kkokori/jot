@@ -6,7 +6,6 @@ import NavBar from './NavBar';
 import Home from './Home';
 import UserMenu from './UserMenu';
 
-import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 
 /*
@@ -31,7 +30,12 @@ class App extends Component
         let date = Moment();
         super(props);
         this.state = {
-            token: "",
+            user: {
+                token: "",
+                email: "",
+                id: "",
+                username: "",
+            },
             validUser: false,
             selectedNote: null,
             editing: false,
@@ -88,22 +92,31 @@ class App extends Component
         };
     }
 
-    handleLogin = (token, username) =>
+    handleLogin = (data) =>
     {
+        console.log(data);
         this.setState({
-            token: token,
             validUser: true,
-            username: username,
+            user: {
+                id: data.user_id,
+                token: data.token,
+                username: data.username,
+                email: data.email,
+            }
         });
     }
 
     handleLogout = () =>
     {
         this.setState({
-            token: "",
-            validUser: false,
-            username: "",
             openMenu: false,
+            validUser: false,
+            user: {
+                id: "",
+                token: "",
+                username: "",
+                email: "",
+            }
         });
     }
 
@@ -318,14 +331,15 @@ class App extends Component
     render()
     {
         const content = this.state.validUser ?
-            <Home handleLoadNotes={ this.handleLoadNotes } handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote } editTitle={ this.editTitle }
-                editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } selectedNote={ this.state.selectedNote } token={ this.props.token } />
+            <Home handleLoadNotes={ this.handleLoadNotes } handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote }
+                editTitle={ this.editTitle } editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes }
+                selectedNote={ this.state.selectedNote } token={ this.state.user.token } />
             : <Login handleLogin={ this.handleLogin } />;
 
         return (
             <Grid container className='app-container' justify='center' alignItems='center'>
                 <Grid className='navbar-container' item sm={ 12 }>
-                    <UserMenu openMenu={ this.state.openMenu } username={ this.state.username }
+                    <UserMenu openMenu={ this.state.openMenu } user={ this.state.user }
                         handleMenuOpen={ this.handleMenuOpen } handleLogout={ this.handleLogout } />
                     <NavBar validated={ this.state.validUser } notes={ this.props.notes } note={ this.state.selectedNote }
                         tags={ this.state.tags } newNote={ this.newNote } editTag={ this.editTag } filterTags={ this.filterTags }

@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
-import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
@@ -196,33 +193,9 @@ class Login extends Component
             .then(data =>
             {
                 if (data)
-                    this.props.handleLogin(data, this.state.username);
+                    this.props.handleLogin(data);
             });
     }
-
-
-    // Setup some globally accessible state
-    /*
-  
-      loginUser = (username, password) =>
-      {
-          let action = ["api-token-auth", "obtain-token"];
-          let params = { username: "example", email: "example@example.com" };
-          client.action(window.schema, ['api/users'], ).then(function (result)
-          {
-              // On success, instantiate an authenticated client.
-              let auth = window.coreapi.auth.TokenAuthentication({
-                  scheme: 'JWT',
-                  token: result['token'],
-              })
-              window.client = coreapi.Client({ auth: auth });
-              window.loggedIn = true;
-          }).catch(function (error)
-          {
-              // Handle error case where eg. user provides incorrect credentials.
-          })
-      }
-      */
 
     render()
     {
