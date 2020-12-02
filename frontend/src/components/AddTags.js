@@ -37,7 +37,7 @@ class AddTags extends Component
                     { this.props.tags.map(t =>
                     {
                         return <MenuItem key={ t } value={ t }>{ t }</MenuItem>
-                    }) };
+                    }) }
                 </Select>
             </FormControl>
         );

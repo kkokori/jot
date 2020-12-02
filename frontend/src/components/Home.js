@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import NoteDetail from './NoteDetail';
 import NoteThumb from './NoteThumb';
+import NewNote from './NewNote';
 
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
@@ -10,8 +11,33 @@ import Divider from '@material-ui/core/Divider';
 
 class Home extends Component
 {
+    constructor(props)
+    {
+        super(props);
+        this.state = {
+            update: false,
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) 
+    {
+        if (this.state.update !== prevState.update)
+            if (this.state.update)
+            {
+                this.setState(
+                    {
+                        update: false,
+                    });
+                this.fetchNotes();
+            }
+    }
 
     componentDidMount()
+    {
+        this.fetchNotes();
+    }
+
+    fetchNotes = () =>
     {
         fetch('/api/notes/',
             {
@@ -19,26 +45,29 @@ class Home extends Component
                 credentials: 'include',
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Token' + this.props.token,
+                    'Authorization': ('Token ' + this.props.user.token),
                     'Content-Type': 'application/json',
                 },
-            }
-        )
+            })
             .then(res => res.json())
             .then(
                 (result) =>
                 {
-                    console.log(result.results)
-                    this.props.handleLoadNotes(result.results);
-                    //handleEmployeeLoadSuccess(result.results);
+                    this.props.handleLoadNotes(result);
                 },
                 (error) =>
                 {
-                    console.log(error);  // error handling
+                    alert("Notes could not be loaded. Please refresh and try again.");
                 }
             );
     }
 
+    updateNotes = () =>
+    {
+        this.setState({
+            update: !this.state.update,
+        });
+    }
 
     render()
     {
@@ -55,6 +84,8 @@ class Home extends Component
         return (
             <Grid container item className='home-container' alignContent='center'
                 justify='space-evenly' alignItems='center' direction='row' >
+                <NewNote newNoteModalOpen={ this.props.newNoteModalOpen } openNewNoteModal={ this.props.openNewNoteModal }
+                    user={ this.props.user } tags={ this.props.tags } updateNotes={ this.updateNotes } />
                 <Grid className='notes-thumb-container' item sm={ 4 }>
                     <List className="notes-thumb-list">
                         { noteList }

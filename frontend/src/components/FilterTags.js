@@ -30,7 +30,10 @@ class FilterTags extends Component
 
         if (!included)
             tags.push(tag);
-
+        
+        if (tag == "")
+            tags.push("Untagged");
+        
         this.setState({
             selectedTags: tags,
         });

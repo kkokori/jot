@@ -83,7 +83,7 @@ class ChangePass extends Component
                 {
                     this.setState({
                         errorMessage:
-                            (< Typography variant="caption" className="error-message" >
+                            (< Typography variant="caption" color="error" className="error-message" >
                                 You may have entered an incorrect password. Please try again.
                             </Typography >),
                         error: true,
@@ -108,7 +108,7 @@ class ChangePass extends Component
     render()
     {
         return (
-            <form onSubmit={ () => { console.log("submitted") } } className="change-pass-form">
+            <form className="change-pass-form">
                 <h2>Change password</h2>
                 { this.state.errorMessage }
                 <div className="change-pass-fields">

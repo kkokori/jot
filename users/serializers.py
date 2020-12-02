@@ -32,12 +32,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True, max_length=30)
-    new_password = serializers.CharField(required=True, max_length=30)
-    new_password2 = serializers.CharField(required=True, max_length=30)
+    old_password = serializers.CharField(required=True, min_length=8, write_only=True)
+    new_password = serializers.CharField(required=True, min_length=8, write_only=True)
+    new_password2 = serializers.CharField(required=True, min_length=8, write_only=True)
 
     def validate(self, data):
-        # add here additional check for password strength if needed
         if not self.context['request'].user.check_password(data.get('old_password')):
             raise serializers.ValidationError(
                 {'old_password': 'Wrong password.'})

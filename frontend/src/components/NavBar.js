@@ -26,7 +26,7 @@ class NavBar extends Component
             )
             :
             (
-                <IconButton fontSize='large' edge='start' onClick={ () => this.props.openMenu() }>
+                <IconButton fontSize='large' edge='start' >
                     <CreateIcon />
                 </IconButton>
             )
@@ -38,7 +38,7 @@ class NavBar extends Component
                     <FilterTags filterTags={ this.props.filterTags } tags={ this.props.tags } note={ this.props.note } />
                     <AddTags editTag={ this.props.editTag } tags={ this.props.tags } note={ this.props.note } />
                     <Button disableElevation size='large' variant='contained' color='default'
-                        edge='end' endIcon={ <AddCircleIcon /> } onClick={ this.props.newNote }>
+                        edge='end' endIcon={ <AddCircleIcon /> } onClick={ this.props.openNewNoteModal }>
                         New Note
                     </Button>
                 </div>

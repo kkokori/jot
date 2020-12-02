@@ -8,19 +8,6 @@ import UserMenu from './UserMenu';
 
 import Grid from '@material-ui/core/Grid';
 
-/*
-The SessionAuthentication class allows session cookies to provide the user authentication. You'll want to provide a standard HTML login flow, to allow the user to login, and then instantiate a client using session authentication:
-
-let auth = new coreapi.auth.SessionAuthentication({
-    csrfCookieName: 'csrftoken',
-    csrfHeaderName: 'X-CSRFToken',
-});
-let client = new coreapi.Client({auth: auth});
-*/
-
-const coreapi = require('coreapi')
-var client = new coreapi.Client();
-
 class App extends Component
 {
     constructor(props)
@@ -41,54 +28,9 @@ class App extends Component
             editing: false,
             currentID: 6,
             openMenu: false,
-            tags: ["Grocery", "Important", "Passwords", "To-Do"],
-            notes: [
-                {
-                    visible: true,
-                    id: 1,
-                    title: "Okay bb",
-                    content: "random dshsahjkghj",
-                    date: date,
-                    tag: "Grocery",
-                    selected: false,
-                },
-                {
-                    visible: true,
-                    id: 2,
-                    title: "I wanna die",
-                    content: "hsajkjkah dshsahjkghj",
-                    date: date,
-                    tag: "",
-                    selected: false,
-                },
-                {
-                    visible: true,
-                    id: 3,
-                    title: "Note",
-                    content: "I need to work on the stupid database stuff omg lolol",
-                    date: date,
-                    tag: "To-Do",
-                    selected: false,
-                },
-                {
-                    visible: true,
-                    id: 4,
-                    title: "hello",
-                    content: "the mooooooooooooooooooooooooooooooooooodddd is weird because hgjskgdhakhakaahljkhagdlasbnhdksabhlbdfgkjabdhkl",
-                    date: date,
-                    tag: "Important",
-                    selected: false,
-                },
-                {
-                    visible: true,
-                    id: 5,
-                    title: "Take Into Account All of the..fghjkhsfdgyuiaabfvghbjnkmb",
-                    content: "ok dscfaghjks vgyisdhjlakl vghjelk 762189 veygbhjngbhnjm",
-                    date: date,
-                    tag: "Passwords",
-                    selected: false,
-                },
-            ]
+            tags: ["Untagged", "Grocery", "Important", "Passwords", "To-Do"],
+            notes: [],
+            newNoteModalOpen: false,
         };
     }
 
@@ -122,9 +64,24 @@ class App extends Component
 
     handleLoadNotes = (notes) =>
     {
+        let noteList = [];
+        notes.forEach(n =>
+        {
+            let note =
+            {
+                id: n.id,
+                date: Moment(n.date_created),
+                title: n.title,
+                content: n.content,
+                tag: n.tag,
+                visible: true,
+            }
+            noteList.push(note);
+        });
+
         this.setState({
-            notes: notes,
-        })
+            notes: noteList,
+        });
     }
 
     handleClickNote = (note) =>
@@ -165,9 +122,12 @@ class App extends Component
         }
     }
 
-    newNote = () =>
+    openNewNoteModal = () =>
     {
-        if (this.state.selectedNote !== null && this.state.selectedNote.title === "")
+        this.setState({
+            newNoteModalOpen: !this.state.newNoteModalOpen,
+        });
+        /*if (this.state.selectedNote !== null && this.state.selectedNote.title === "")
         {
             alert("You must give this note a title!");
             return;
@@ -191,15 +151,6 @@ class App extends Component
         };
         notes.push(newNote);
 
-        // Here we've changed the action from "list" to "create", and additionally
-        // pass in the data we want to use. The rest is the same as above.
-        client.action(window.schema, ['api/notes', 'create'], newNote).then((result) =>
-        {
-            console.log(result);
-        }).catch((error) =>
-        {
-            alert.log(error);
-        });
 
 
         this.setState({
@@ -207,6 +158,7 @@ class App extends Component
             currentID: id + 1,
             notes: notes,
         });
+        */
     }
 
     editTitle = (title, note) =>
@@ -255,7 +207,10 @@ class App extends Component
         let notes = this.state.notes.map(n =>
         {
             if (n.id === note.id)
-                n.tag = tag;
+            {
+                if (tag !== "Untagged")
+                    n.tag = tag;
+            }
             return n;
         });
 
@@ -279,6 +234,8 @@ class App extends Component
             {
                 // selected tags include notes's tag, make it visible
                 if (tags.includes(n.tag))
+                    n.visible = true;
+                else if (tags.includes("Untagged") && n.tag == "")
                     n.visible = true;
                 else
                     n.visible = false;
@@ -332,8 +289,8 @@ class App extends Component
     {
         const content = this.state.validUser ?
             <Home handleLoadNotes={ this.handleLoadNotes } handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote }
-                editTitle={ this.editTitle } editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes }
-                selectedNote={ this.state.selectedNote } token={ this.state.user.token } />
+                editTitle={ this.editTitle } editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } tags={ this.state.tags }
+                selectedNote={ this.state.selectedNote } user={ this.state.user } newNoteModalOpen={ this.state.newNoteModalOpen } openNewNoteModal={ this.openNewNoteModal } />
             : <Login handleLogin={ this.handleLogin } />;
 
         return (
@@ -342,8 +299,8 @@ class App extends Component
                     <UserMenu openMenu={ this.state.openMenu } user={ this.state.user }
                         handleMenuOpen={ this.handleMenuOpen } handleLogout={ this.handleLogout } />
                     <NavBar validated={ this.state.validUser } notes={ this.props.notes } note={ this.state.selectedNote }
-                        tags={ this.state.tags } newNote={ this.newNote } editTag={ this.editTag } filterTags={ this.filterTags }
-                        sortNotes={ this.sortNotes } openMenu={ this.handleMenuOpen } />
+                        tags={ this.state.tags } openNewNoteModal={ this.openNewNoteModal } editTag={ this.editTag }
+                        sortNotes={ this.sortNotes } filterTags={ this.filterTags } openMenu={ this.handleMenuOpen } />
                 </Grid>
                 { content }
             </Grid>
@@ -352,3 +309,50 @@ class App extends Component
 }
 
 export default App;
+
+/*{
+                    visible: true,
+                    id: 1,
+                    title: "Okay bb",
+                    content: "random dshsahjkghj",
+                    date: date,
+                    tag: "Grocery",
+                    selected: false,
+                },
+                {
+                    visible: true,
+                    id: 2,
+                    title: "I wanna die",
+                    content: "hsajkjkah dshsahjkghj",
+                    date: date,
+                    tag: "",
+                    selected: false,
+                },
+                {
+                    visible: true,
+                    id: 3,
+                    title: "Note",
+                    content: "I need to work on the stupid database stuff omg lolol",
+                    date: date,
+                    tag: "To-Do",
+                    selected: false,
+                },
+                {
+                    visible: true,
+                    id: 4,
+                    title: "hello",
+                    content: "the mooooooooooooooooooooooooooooooooooodddd is weird because hgjskgdhakhakaahljkhagdlasbnhdksabhlbdfgkjabdhkl",
+                    date: date,
+                    tag: "Important",
+                    selected: false,
+                },
+                {
+                    visible: true,
+                    id: 5,
+                    title: "Take Into Account All of the..fghjkhsfdgyuiaabfvghbjnkmb",
+                    content: "ok dscfaghjks vgyisdhjlakl vghjelk 762189 veygbhjngbhnjm",
+                    date: date,
+                    tag: "Passwords",
+                    selected: false,
+                },
+            ]*/

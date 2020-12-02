@@ -119,7 +119,7 @@ class Login extends Component
                 {
                     this.setState({
                         errorMessage:
-                            <Typography variant="caption" className="error-message" >
+                            <Typography variant="caption" color="error" >
                                 Something went wrong.We could not register your account.Please try again.
                             </Typography>,
                         error: true,
@@ -171,7 +171,7 @@ class Login extends Component
                 {
                     this.setState({
                         errorMessage:
-                            <Typography variant="caption" className="error-message">
+                            <Typography variant="caption" color="error">
                                 Your username or password is incorrect.
                                 <br />
                                 Please try again, or&nbsp;
