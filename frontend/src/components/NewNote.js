@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
-
 import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -108,6 +109,7 @@ class NewNote extends Component
                 {
                     this.props.updateNotes();
                     this.props.openNewNoteModal();
+                    this.props.handleClickNote(this.props.note);
                     this.setState({
                         title: "",
                         content: "",
@@ -118,15 +120,15 @@ class NewNote extends Component
                 }
             });
     }
-
+    //className='new-note-container'
     render()
     {
         const tag = this.state.tag === "Untagged" ? '' : this.state.tag;
 
         return (
-            <Modal className='new-note-container' open={ this.props.newNoteModalOpen }
-                hideBackdrop onBackdropClick={ this.props.openNewNoteModal }>
-                <form className="new-note-form">
+            <Dialog disableAutoFocus hideBackdrop fullWidth
+                open={ this.props.newNoteModalOpen } onBackdropClick={ this.props.openNewNoteModal }>
+                <DialogTitle>
                     <div className="new-note-headers">
                         <Typography className="new-note-header" variant="h5" display="block" align="left">New Note</Typography>
                         <div className='tag-select-container'>
@@ -142,25 +144,24 @@ class NewNote extends Component
                             </FormControl>
                         </div>
                     </div>
-                        { this.state.errorMessage }
-                    <div className="new-note-fields">
-                        <TextField required className="note-title-input" placeholder="Title" type="text" error={ this.state.error }
-                            variant="outlined" value={ this.state.title } onChange={ (e) => this.handleTitleChange(e.target.value) } />
-                        <br /><br />
-                        <TextField className="note-content-input" multiline variant="outlined" placeholder="Note Content" type="text" rows={ 8 }
-                            rowsMax={ 8 } value={ this.state.content } onChange={ (e) => this.handleContentChange(e.target.value) } />
-                        <br /><br />
-                        <div className="cancel-new-note-button">
-                            <Button onClick={ this.props.openNewNoteModal } size="small">Cancel</Button>
-                        </div>
-                        <div className="new-note-button">
-                            <Button variant="contained" size="medium" onClick={ this.handleNewNoteSubmit }>
-                                Create Note
+                </DialogTitle>
+                <DialogContent>
+                    { this.state.errorMessage }
+                    <TextField required className="note-title-input" placeholder="Title" type="text" error={ this.state.error }
+                        variant="outlined" value={ this.state.title } onChange={ (e) => this.handleTitleChange(e.target.value) } />
+                    <br /><br />
+                    <TextField className="note-content-input" multiline variant="outlined" placeholder="Note Content" type="text" rows={ 8 }
+                        rowsMax={ 8 } value={ this.state.content } onChange={ (e) => this.handleContentChange(e.target.value) } />
+                </DialogContent>
+                <DialogActions>
+                        <Button onClick={ this.props.openNewNoteModal } size="small">Cancel</Button>
+                        <Button variant="contained" size="medium" onClick={ this.handleNewNoteSubmit }>
+                            Create Note
                         </Button>
-                        </div>
-                    </div>
-                </form>
-            </Modal>
+                </DialogActions>
+
+
+            </Dialog>
         );
     }
 

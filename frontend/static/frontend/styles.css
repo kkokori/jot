@@ -40,16 +40,9 @@ body {
 }
 
 .change-pass-container {
-    background-color: white;
-    width: 30%;
-    height: 50%;
-    margin: auto;
-    border-radius: 15px;
     text-align: center;
-    padding-top: 10%;
 }
-.change-pass-button-container .MuiButton-contained, .login-button .MuiButton-contained 
-.register-button .MuiButton-contained, .new-note-button .MuiButton-contained {
+.MuiDialogActions-root .MuiButton-contained {
     background-color: cornflowerblue !important;
     color: white !important;
 }
@@ -105,7 +98,6 @@ body {
 .note-content-input, .note-title-input {
     width: 90%;
 }
-
 
 .home-container {
     height: 89%;
@@ -171,10 +163,7 @@ body {
 .note-detail-nav {
     background-color: rgb(202, 219, 255);
 }
-/*
-.note-title:hover {
-    background-color: rgba(100, 148, 237, 0.5);
-}*/
+
 .note-content-container {
     width: 100%;
     height: 100%;

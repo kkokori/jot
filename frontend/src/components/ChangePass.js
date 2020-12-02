@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -107,11 +111,28 @@ class ChangePass extends Component
 
     render()
     {
+
+        /*
+
+<Dialog disableBackdropClick disableEscapeKeyDown open={ this.state.openConfirm }>
+                    <DialogTitle id="confirmation-dialog-title">Are you sure you want to delete this note?</DialogTitle>
+                    <DialogActions>
+                        <Button autoFocus onClick={ this.handleOpenConfirm } color="primary">
+                            Cancel
+                        </Button>
+                        <Button variant="contained" onClick={ this.handleDeleteNote } color="primary">
+                            Confirm
+                     </Button>
+                    </DialogActions>
+                </Dialog>
+
+        */
         return (
-            <form className="change-pass-form">
-                <h2>Change password</h2>
-                { this.state.errorMessage }
-                <div className="change-pass-fields">
+            <Dialog disableAutoFocus hideBackdrop fullWidth maxWidth='xs' className='change-pass-container'
+                open={ this.props.open } onBackdropClick={ this.props.closeModal }>
+                <DialogTitle>Change Password</DialogTitle>
+                <DialogContent>
+                    { this.state.errorMessage }
                     <TextField required id="current-pass-input" placeholder="Current Password" type="password" error={ this.state.error }
                         value={ this.state.oldPass } onChange={ (e) => this.handleOldPassChange(e.target.value) } />
                     <br /><br />
@@ -120,14 +141,17 @@ class ChangePass extends Component
                     <br /><br />
                     <TextField required id="new-pass2-input" placeholder="New Password Again" type="password" helperText={ this.state.passMatchText }
                         error={ !this.state.match } value={ this.state.password2 } onChange={ (e) => this.handlePass2Change(e.target.value) } />
-                    <br /><br />
-                    <div className="change-pass-button-container">
-                        <Button className="change-pass-button" variant="contained" size="medium" onClick={ this.handleSubmitPassChange }>
-                            Change Password
-                        </Button>
-                    </div>
-                </div>
-            </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={ this.props.closeModal } color="primary">
+                        Cancel
+                    </Button>
+                    <Button variant="contained" size="medium" onClick={ this.handleSubmitPassChange }>
+                        Change Password
+                    </Button>
+
+                </DialogActions>
+            </Dialog>
         );
     }
 

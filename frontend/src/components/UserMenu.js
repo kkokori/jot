@@ -61,10 +61,7 @@ class UserMenu extends Component
                         </AppBar>
                     </Grid>
                     <Grid item>
-                        <Modal className='change-pass-container' open={ this.state.passModalOpen } 
-                            disableAutoFocus hideBackdrop onBackdropClick={ this.openChangePass }>
-                            <ChangePass closeModal={ this.openChangePass } user={ this.props.user } />
-                        </Modal>
+                        <ChangePass open={ this.state.passModalOpen } closeModal={ this.openChangePass } user={ this.props.user } />
                         <List className='user-settings-menu'>
                             <ListItem>
                                 <Typography variant='button'>

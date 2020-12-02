@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
+import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 class NoteDetail extends Component
@@ -49,7 +50,7 @@ class NoteDetail extends Component
 
     saveTitle = (e) =>
     {
-        if (e.code === "Enter")
+        if (e.code === "Enter" || e.type === "click")
             this.setState({
                 editTitle: false,
             });
@@ -86,6 +87,7 @@ class NoteDetail extends Component
                 else
                 {
                     this.props.updateNotes();
+                    this.props.handleClickNote(this.props.note);
                     this.setState({
                         noteSelected: false,
                         noteid: "",
@@ -107,8 +109,14 @@ class NoteDetail extends Component
                 value={ this.props.note.content } onChange={ (e) => this.props.editNote(e.target.value, this.props.note) } />
 
             title = (this.state.editTitle || this.props.note.title == "") ?
-                <TextField required className="note-title" id={ "note-" + this.props.id + "-title" } value={ this.props.note.title }
-                    onChange={ (e) => this.props.editTitle(e.target.value, this.props.note) } onKeyDown={ (e) => this.saveTitle(e) } />
+                <div>
+                    <TextField required className="note-title" id={ "note-" + this.props.id + "-title" } value={ this.props.note.title }
+                        onChange={ (e) => this.props.editTitle(e.target.value, this.props.note) } onKeyDown={ (e) => this.saveTitle(e) } />
+                    <IconButton edge="end" size="small" disabled={ !this.state.noteSelected }
+                        onClick={ (e) => this.saveTitle(e) }>
+                        <SaveIcon />
+                    </IconButton>
+                </div>
                 : this.props.note.title;
 
             subheader = this.props.note.date.format("MM-DD-YYYY hh:mmA");
@@ -134,7 +142,7 @@ class NoteDetail extends Component
                     action={
                         <div>
                             { tag }
-                            <IconButton edge="end" disabled={ !this.state.noteSelected }
+                            <IconButton edge="end" size="large" disabled={ !this.state.noteSelected }
                                 onClick={ this.handleOpenConfirm }>
                                 <DeleteIcon />
                             </IconButton>

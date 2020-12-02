@@ -270,7 +270,7 @@ class App extends Component
         const content = this.state.validUser ?
             <Home handleLoadNotes={ this.handleLoadNotes } handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote }
                 editTitle={ this.editTitle } editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } tags={ this.state.tags }
-                selectedNote={ this.state.selectedNote } user={ this.state.user } newNoteModalOpen={ this.state.newNoteModalOpen } openNewNoteModal={ this.openNewNoteModal } />
+                note={ this.state.selectedNote } user={ this.state.user } newNoteModalOpen={ this.state.newNoteModalOpen } openNewNoteModal={ this.openNewNoteModal } />
             : <Login handleLogin={ this.handleLogin } />;
 
         return (

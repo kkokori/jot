@@ -84,8 +84,8 @@ class Home extends Component
         return (
             <Grid container item className='home-container' alignContent='center'
                 justify='space-evenly' alignItems='center' direction='row' >
-                <NewNote newNoteModalOpen={ this.props.newNoteModalOpen } openNewNoteModal={ this.props.openNewNoteModal }
-                    user={ this.props.user } tags={ this.props.tags } updateNotes={ this.updateNotes } />
+                <NewNote newNoteModalOpen={ this.props.newNoteModalOpen } openNewNoteModal={ this.props.openNewNoteModal } note={ this.props.note }
+                    user={ this.props.user } tags={ this.props.tags } updateNotes={ this.updateNotes } handleClickNote={ this.props.handleClickNote } />
                 <Grid className='notes-thumb-container' item sm={ 4 }>
                     <List className="notes-thumb-list">
                         { noteList }
@@ -93,8 +93,9 @@ class Home extends Component
                 </Grid>
                 <Divider orientation='vertical' />
                 <Grid className='preview-container' item sm={ 7 }>
-                    <NoteDetail deleteNote={ this.props.deleteNote } editNote={ this.props.editNote } updateNotes={ this.updateNotes }
-                        editTag={ this.props.editTag } editTitle={ this.props.editTitle } note={ this.props.selectedNote } user={ this.props.user } />
+                    <NoteDetail deleteNote={ this.props.deleteNote } editNote={ this.props.editNote }
+                        updateNotes={ this.updateNotes } editTag={ this.props.editTag } editTitle={ this.props.editTitle }
+                        note={ this.props.note } user={ this.props.user } handleClickNote={ this.props.handleClickNote } />
                 </Grid>
             </Grid>
         );
