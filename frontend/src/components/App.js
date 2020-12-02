@@ -26,7 +26,6 @@ class App extends Component
             validUser: false,
             selectedNote: null,
             editing: false,
-            currentID: 6,
             openMenu: false,
             tags: ["Untagged", "Grocery", "Important", "Passwords", "To-Do"],
             notes: [],
@@ -34,9 +33,33 @@ class App extends Component
         };
     }
 
+    resetState = () =>
+    {
+        this.setState({
+            user: {
+                token: "",
+                email: "",
+                id: "",
+                username: "",
+            },
+            validUser: false,
+            selectedNote: null,
+            editing: false,
+            openMenu: false,
+            notes: [],
+            newNoteModalOpen: false,
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState)
+    {
+        if (prevState.validUser !== this.state.validUser)
+            if (!this.state.validUser) // logged out
+                this.resetState(); 
+    }
+
     handleLogin = (data) =>
     {
-        console.log(data);
         this.setState({
             validUser: true,
             user: {
@@ -50,16 +73,7 @@ class App extends Component
 
     handleLogout = () =>
     {
-        this.setState({
-            openMenu: false,
-            validUser: false,
-            user: {
-                id: "",
-                token: "",
-                username: "",
-                email: "",
-            }
-        });
+        this.resetState();
     }
 
     handleLoadNotes = (notes) =>
@@ -127,38 +141,6 @@ class App extends Component
         this.setState({
             newNoteModalOpen: !this.state.newNoteModalOpen,
         });
-        /*if (this.state.selectedNote !== null && this.state.selectedNote.title === "")
-        {
-            alert("You must give this note a title!");
-            return;
-        }
-
-        let notes = this.state.notes.map(n =>
-        {
-            n.selected = false;
-            return n;
-        });
-        let id = this.state.currentID;
-        let newNote =
-        {
-            visible: true,
-            id: id,
-            title: "",
-            content: "",
-            date: Moment(),
-            tag: "",
-            selected: true,
-        };
-        notes.push(newNote);
-
-
-
-        this.setState({
-            selectedNote: newNote,
-            currentID: id + 1,
-            notes: notes,
-        });
-        */
     }
 
     editTitle = (title, note) =>
@@ -250,7 +232,6 @@ class App extends Component
     sortNotes = (sort) =>
     {
         let notes = this.state.notes;
-        console.log(sort);
         if (sort === "Date (oldest first)")
             notes.sort((m, n) =>
             {
@@ -269,7 +250,6 @@ class App extends Component
         else if (sort === "Title (descending)")
             notes.sort((m, n) =>
             {
-                console.log(n.title.toLowerCase().localeCompare(m.title.toLowerCase()));
                 return n.title.toLowerCase().localeCompare(m.title.toLowerCase());
             });
 

@@ -46,15 +46,7 @@ class ChangePasswordSerializer(serializers.Serializer):
                 {'new_password': 'Password must be confirmed correctly.'})
 
         return data
-
-    """
-    def update(self, instance, validated_data):
-        if 'password' in validated_data:
-            password = validated_data.pop('password')
-            instance.set_password(password)
-        return super(UserSerializer, self).update(instance, validated_data)
-
-    """   
+        
     def update(self, instance, validated_data):
         instance.set_password(validated_data['new_password'])
         instance.save()

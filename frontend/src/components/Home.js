@@ -93,8 +93,8 @@ class Home extends Component
                 </Grid>
                 <Divider orientation='vertical' />
                 <Grid className='preview-container' item sm={ 7 }>
-                    <NoteDetail deleteNote={ this.props.deleteNote } editNote={ this.props.editNote }
-                        editTag={ this.props.editTag } editTitle={ this.props.editTitle } note={ this.props.selectedNote } />
+                    <NoteDetail deleteNote={ this.props.deleteNote } editNote={ this.props.editNote } updateNotes={ this.updateNotes }
+                        editTag={ this.props.editTag } editTitle={ this.props.editTitle } note={ this.props.selectedNote } user={ this.props.user } />
                 </Grid>
             </Grid>
         );

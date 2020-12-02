@@ -28,7 +28,7 @@ class AddTags extends Component
 
     render()
     {
-        const tag = this.props.note !== null ? this.props.note.tag : "";
+        const tag = this.props.note !== null ? this.props.note.tag : ''
         return (
             <FormControl variant='filled' disabled={ this.state.disabledTags } >
                 <InputLabel id='tag-select-label'>Change Tag</InputLabel>

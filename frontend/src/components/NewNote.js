@@ -25,7 +25,7 @@ class NewNote extends Component
             username: this.props.user.username,
             title: "",
             content: "",
-            tag: "Untagged",
+            tag: "",
             error: false,
             errorMessage: "",
         }
@@ -33,8 +33,9 @@ class NewNote extends Component
 
     setTag = (tag) =>
     {
+        let val = (tag === "Untagged") ? "" : tag;
         this.setState({
-            tag: tag,
+            tag: val,
         });
     }
 
@@ -60,7 +61,7 @@ class NewNote extends Component
         {
             this.setState({
                 error: true,
-                errorMessage: (< Typography variant="caption" className="error-message" >
+                errorMessage: (< Typography variant="caption" color="error" >
                     Title must not be empty. Please enter a title for this note.
                 </Typography >),
             });
@@ -103,14 +104,14 @@ class NewNote extends Component
             })
             .then(data =>
             {
-                this.props.updateNotes();
-                this.props.openNewNoteModal();
                 if (data)
                 {
+                    this.props.updateNotes();
+                    this.props.openNewNoteModal();
                     this.setState({
                         title: "",
                         content: "",
-                        tag: "Untagged",
+                        tag: "",
                         error: false,
                         errorMessage: "",
                     });
@@ -120,18 +121,7 @@ class NewNote extends Component
 
     render()
     {
-        /*this.props.tags.map(t =>
-                                    {
-                                        return <MenuItem key={ t } value={ t }>{ t }</MenuItem>
-                                    })
-        <Select className='tag-select' labelId='tag-select-label' id='tag-select' autoWidth value={ "Untagged" }
-            label='Add Tag'>
-            <MenuItem key={ "pls" } value={ "pls" }>Pls</MenuItem>
-        </Select>
-
-        */
-
-        const tag = (this.state.tag === "Untagged") ? "" : this.state.tag;
+        const tag = this.state.tag === "Untagged" ? '' : this.state.tag;
 
         return (
             <Modal className='new-note-container' open={ this.props.newNoteModalOpen }
@@ -146,18 +136,13 @@ class NewNote extends Component
                                     value={ tag } onChange={ (e) => this.setTag(e.target.value) }>
                                     { this.props.tags.map(t =>
                                     {
-                                        let val = t;
-                                        if (t === "Untagged")
-                                            val = '';
-
-                                        return <MenuItem key={ t } value={ val }>{ t }</MenuItem>;
+                                        return <MenuItem key={ t } value={ t }>{ t }</MenuItem>;
                                     }) }
                                 </Select>
                             </FormControl>
                         </div>
-                        <br /><br />
-                        { this.state.errorMessage }
                     </div>
+                        { this.state.errorMessage }
                     <div className="new-note-fields">
                         <TextField required className="note-title-input" placeholder="Title" type="text" error={ this.state.error }
                             variant="outlined" value={ this.state.title } onChange={ (e) => this.handleTitleChange(e.target.value) } />
