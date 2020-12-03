@@ -18,15 +18,27 @@ class NavBar extends Component
 {
     render()
     {
-        const icon = this.props.validated ? <MenuIcon /> : <CreateIcon />
+        const icon = this.props.validated ?
+            (
+                <IconButton fontSize='large' edge='start' onClick={ () => this.props.openMenu() }>
+                    <MenuIcon />
+                </IconButton>
+            )
+            :
+            (
+                <IconButton fontSize='large' edge='start' >
+                    <CreateIcon />
+                </IconButton>
+            )
+        
         const control = this.props.validated ?
             (
                 <div className='nav-controls'>
-                    <SortBy notes={ this.props.notes } sortNotes={ this.props.sortNotes } />
-                    <FilterTags filterTags={ this.props.filterTags } tags={ this.props.tags } note={ this.props.note } />
-                    <AddTags editTag={ this.props.editTag } tags={ this.props.tags } note={ this.props.note }/>
+                    <SortBy handleSort={ this.props.handleSort } />
+                    <FilterTags handleFilter={ this.props.handleFilter } tags={ this.props.tags } />
+                    <AddTags reloadNotes={ this.props.reloadNotes } updateNote={ this.props.updateNote } tags={ this.props.tags } note={ this.props.note } />
                     <Button disableElevation size='large' variant='contained' color='default'
-                        edge='end' endIcon={ <AddCircleIcon /> } onClick={ this.props.newNote }>
+                        edge='end' endIcon={ <AddCircleIcon /> } onClick={ this.props.openNewNoteModal }>
                         New Note
                     </Button>
                 </div>
@@ -35,9 +47,7 @@ class NavBar extends Component
         return (
             <AppBar position='static'>
                 <Toolbar className='navbar'>
-                    <IconButton fontSize='large' edge='start' onClick={ () => this.props.openMenu() }>
                         { icon }
-                    </IconButton>
                     <Typography className='nav-title' variant='h3'>
                         Jot.
                     </Typography>

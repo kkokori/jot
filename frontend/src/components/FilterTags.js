@@ -30,13 +30,18 @@ class FilterTags extends Component
 
         if (!included)
             tags.push(tag);
+        /*
+        if (tag == "")
+            tags.push("Untagged");
+            */
 
+        this.props.handleFilter(tags);
         this.setState({
             selectedTags: tags,
         });
 
-        this.props.filterTags(tags);
     }
+
     render()
     {
         return (

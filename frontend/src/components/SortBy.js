@@ -21,7 +21,7 @@ class SortBy extends Component
 
     handleSelectSort = (sort) =>
     {
-        this.props.sortNotes(sort);
+        this.props.handleSort(sort);
         this.setState({
             selectedSort: sort,
         })
