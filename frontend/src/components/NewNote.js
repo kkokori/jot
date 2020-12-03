@@ -32,18 +32,6 @@ class NewNote extends Component
         }
     }
 
-    componentDidMount()
-    {
-        this.setState({
-            title: "",
-            content: "",
-            tag: "",
-            error: false,
-            errorMessage: "",
-        });
-
-    }
-
     setTag = (tag) =>
     {
         let val = (tag === "Untagged") ? "" : tag;
@@ -120,6 +108,13 @@ class NewNote extends Component
                 if (data)
                 {
                     this.props.reloadNotes();
+                    this.setState({
+                        title: "",
+                        content: "",
+                        tag: "",
+                        error: false,
+                        errorMessage: "",
+                    });
                     this.props.openNewNoteModal();
                     this.props.handleClickNote(this.props.note);
                 }

@@ -254,7 +254,7 @@ class Home extends Component
                 <NewNote newNoteModalOpen={ this.props.newNoteModalOpen } openNewNoteModal={ this.props.openNewNoteModal } note={ this.props.note }
                     user={ this.props.user } tags={ this.props.tags } reloadNotes={ this.props.reloadNotes } handleClickNote={ this.handleClickNote } />
                 <Grid className='notes-thumb-container' item sm={ 4 }>
-                    <List className="notes-thumb-list">
+                    <List disablePadding className="notes-thumb-list">
                         { noteList }
                     </List>
                 </Grid>
