@@ -20,6 +20,8 @@ class App extends Component
                 id: "",
                 username: "",
             },
+            selectedSort: "Date (oldest first)",
+            selectedFilters: [],
             validUser: false,
             selectedNote: null,
             editing: false,
@@ -91,7 +93,7 @@ class App extends Component
         let noteList = [];
         notes.forEach(n =>
         {
-            
+
             let note =
             {
                 id: n.id,
@@ -136,34 +138,6 @@ class App extends Component
         });
     }
 
-    editTitle = (title, note) =>
-    {
-        let notes = this.state.notes.map(n =>
-        {
-            if (n.id === note.id)
-                n.title = title;
-            return n;
-        });
-
-        this.setState({
-            notes: notes,
-        });
-    }
-
-    editNote = (content, note) =>
-    {
-        let notes = this.state.notes.map(n =>
-        {
-            if (n.id === note.id)
-                n.content = content;
-            return n;
-        });
-
-        this.setState({
-            notes: notes,
-        });
-    };
-
     updateNote = (data, note) =>
     {
         const url = "api/update-note/" + note.id + "/";
@@ -193,63 +167,6 @@ class App extends Component
             })
     }
 
-    filterTags = (tags) =>
-    {
-        let notes = [];
-        // no selected tags to filter by (show all)
-        if (tags.length === 0)
-            notes = this.state.notes.map(n =>
-            {
-                n.visible = true;
-                return n;
-            })
-        else
-            notes = this.state.notes.map(n =>
-            {
-                // selected tags include notes's tag, make it visible
-                if (tags.includes(n.tag))
-                    n.visible = true;
-                else if (tags.includes("Untagged") && n.tag == "")
-                    n.visible = true;
-                else
-                    n.visible = false;
-                return n;
-            })
-
-        this.setState({
-            notes: notes,
-        });
-    }
-
-    sortNotes = (sort) =>
-    {
-        let notes = this.state.notes;
-        if (sort === "Date (oldest first)")
-            notes.sort((m, n) =>
-            {
-                return m.date.diff(n.date);
-            });
-        else if (sort === "Date (most recent)")
-            notes.sort((m, n) =>
-            {
-                return n.date.diff(m.date);
-            });
-        else if (sort === "Title (ascending)")
-            notes.sort((m, n) =>
-            {
-                return m.title.toLowerCase().localeCompare(n.title.toLowerCase());
-            });
-        else if (sort === "Title (descending)")
-            notes.sort((m, n) =>
-            {
-                return n.title.toLowerCase().localeCompare(m.title.toLowerCase());
-            });
-
-        this.setState({
-            notes: notes,
-        });
-    }
-
     handleMenuOpen = () =>
     {
         this.setState({
@@ -257,14 +174,29 @@ class App extends Component
         });
     }
 
-    
+    handleSort = (sort) =>
+    {
+        this.setState({
+            selectedSort: sort,
+        })
+    }
+
+    handleFilter = (filters) =>
+    {
+        this.setState({
+            selectedFilters: filters,
+        });
+    }
+
+
     render()
     {
         const content = this.state.validUser ?
             <Home user={ this.state.user } tags={ this.state.tags } notes={ this.state.notes } note={ this.state.selectedNote }
-                reload={ this.state.reload } newNoteModalOpen={ this.state.newNoteModalOpen } openNewNoteModal={ this.openNewNoteModal }
-                initializeStatus={ this.initializeStatus } editTitle={ this.editTitle } editNote={ this.editNote } updateNote={ this.updateNote }
-                reloadNotes={ this.reloadNotes } handleLoadNotes={ this.handleLoadNotes } handleSelectNote={ this.handleSelectNote } />
+                sort={ this.state.selectedSort } filters={ this.state.selectedFilters } reload={ this.state.reload }
+                newNoteModalOpen={ this.state.newNoteModalOpen } openNewNoteModal={ this.openNewNoteModal }
+                initializeStatus={ this.initializeStatus } updateNote={ this.updateNote } reloadNotes={ this.reloadNotes }
+                handleLoadNotes={ this.handleLoadNotes } handleSelectNote={ this.handleSelectNote } />
             :
             <Login handleLogin={ this.handleLogin } />;
 
@@ -275,7 +207,7 @@ class App extends Component
                         handleMenuOpen={ this.handleMenuOpen } handleLogout={ this.handleLogout } />
                     <NavBar validated={ this.state.validUser } tags={ this.state.tags } notes={ this.state.notes } note={ this.state.selectedNote }
                         openNewNoteModal={ this.openNewNoteModal } updateNote={ this.updateNote }
-                        sortNotes={ this.sortNotes } filterTags={ this.filterTags } reloadNotes={ this.reloadNotes } openMenu={ this.handleMenuOpen } />
+                        handleSort={ this.handleSort } handleFilter={ this.handleFilter } reloadNotes={ this.reloadNotes } openMenu={ this.handleMenuOpen } />
                 </Grid>
                 { content }
             </Grid>

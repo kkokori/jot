@@ -38,6 +38,10 @@ class Home extends Component
         }
         if (prevProps.note !== this.props.note)
             this.updateDisplayNote(this.props.note);
+        if (prevProps.sort !== this.props.sort)
+            this.sortNotes();
+        if (prevProps.filters !== this.props.filters)
+            this.filterTags();
     }
 
     componentDidMount()
@@ -172,6 +176,65 @@ class Home extends Component
         });
     }
 
+    sortNotes = () =>
+    {
+        let sort = this.props.sort;
+        let notes = this.state.dispNotes;
+        if (sort === "Date (oldest first)")
+            notes.sort((m, n) =>
+            {
+                return m.date.diff(n.date);
+            });
+        else if (sort === "Date (most recent)")
+            notes.sort((m, n) =>
+            {
+                return n.date.diff(m.date);
+            });
+        else if (sort === "Title (ascending)")
+            notes.sort((m, n) =>
+            {
+                return m.title.toLowerCase().localeCompare(n.title.toLowerCase());
+            });
+        else if (sort === "Title (descending)")
+            notes.sort((m, n) =>
+            {
+                return n.title.toLowerCase().localeCompare(m.title.toLowerCase());
+            });
+
+        this.setState({
+            dispNotes: notes,
+        });
+    }
+
+    filterTags = () =>
+    {
+        let tags = this.props.filters;
+        let notes = [];
+        // no selected tags to filter by (show all)
+        if (tags.length === 0)
+            notes = this.state.dispNotes.map(n =>
+            {
+                n.visible = true;
+                return n;
+            })
+        else
+            notes = this.state.dispNotes.map(n =>
+            {
+                // selected tags include notes's tag, make it visible
+                if (tags.includes(n.tag))
+                    n.visible = true;
+                else if (tags.includes("Untagged") && n.tag == "")
+                    n.visible = true;
+                else
+                    n.visible = false;
+                return n;
+            })
+
+        this.setState({
+            dispNotes: notes,
+        });
+    }
+
 
     render()
     {
@@ -197,8 +260,8 @@ class Home extends Component
                 </Grid>
                 <Divider orientation='vertical' />
                 <Grid className='preview-container' item sm={ 7 }>
-                    <NoteDetail deleteNote={ this.props.deleteNote } editNote={ this.props.editNote } updateDisplayNote={ this.updateDisplayNote }
-                        reloadNotes={ this.props.reloadNotes } updateNote={ this.props.updateNote } editTitle={ this.props.editTitle }
+                    <NoteDetail deleteNote={ this.props.deleteNote } updateDisplayNote={ this.updateDisplayNote }
+                        reloadNotes={ this.props.reloadNotes } updateNote={ this.props.updateNote }
                         note={ this.state.selectedDispNote } user={ this.props.user } handleClickNote={ this.handleClickNote } />
                 </Grid>
             </Grid>
