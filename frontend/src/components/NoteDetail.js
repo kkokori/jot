@@ -60,7 +60,6 @@ class NoteDetail extends Component
     {
         if (e.code === "Enter" || e.type === "click")
         {
-            console.log(e)
             let title = e.target.value;
             const data = { title: title };
 
@@ -140,7 +139,7 @@ class NoteDetail extends Component
         note.title = title;
 
         this.props.updateDisplayNote(note);
-        //this.props.updateNote(data, this.props.note);
+        this.props.updateNote(data, this.props.note);
     }
 
     handleContentChange = (content) =>
