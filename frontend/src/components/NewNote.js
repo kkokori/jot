@@ -32,6 +32,18 @@ class NewNote extends Component
         }
     }
 
+    componentDidMount()
+    {
+        this.setState({
+            title: "",
+            content: "",
+            tag: "",
+            error: false,
+            errorMessage: "",
+        });
+
+    }
+
     setTag = (tag) =>
     {
         let val = (tag === "Untagged") ? "" : tag;
@@ -107,16 +119,9 @@ class NewNote extends Component
             {
                 if (data)
                 {
-                    this.props.updateNotes();
+                    this.props.reloadNotes();
                     this.props.openNewNoteModal();
                     this.props.handleClickNote(this.props.note);
-                    this.setState({
-                        title: "",
-                        content: "",
-                        tag: "",
-                        error: false,
-                        errorMessage: "",
-                    });
                 }
             });
     }
@@ -154,9 +159,9 @@ class NewNote extends Component
                         rowsMax={ 8 } value={ this.state.content } onChange={ (e) => this.handleContentChange(e.target.value) } />
                 </DialogContent>
                 <DialogActions>
-                        <Button onClick={ this.props.openNewNoteModal } size="small">Cancel</Button>
-                        <Button variant="contained" size="medium" onClick={ this.handleNewNoteSubmit }>
-                            Create Note
+                    <Button onClick={ this.props.openNewNoteModal } size="small">Cancel</Button>
+                    <Button variant="contained" size="medium" onClick={ this.handleNewNoteSubmit }>
+                        Create Note
                         </Button>
                 </DialogActions>
 

@@ -22,4 +22,5 @@ class Note(models.Model):
     content = models.TextField(blank=True)
     tag = models.CharField(max_length=20, choices=TAG_CHOICES, default='')
     date_created = models.DateTimeField(auto_now_add=True)
+    selected = models.BooleanField(default=False)
     visible = models.BooleanField(default=True)

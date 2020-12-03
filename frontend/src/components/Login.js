@@ -123,6 +123,7 @@ class Login extends Component
                                 Something went wrong.We could not register your account.Please try again.
                             </Typography>,
                         error: true,
+                        password: "",
                     });
                     return false;
                 }

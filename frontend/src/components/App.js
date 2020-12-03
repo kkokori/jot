@@ -12,9 +12,6 @@ class App extends Component
 {
     constructor(props)
     {
-        // just make a date
-
-        let date = Moment();
         super(props);
         this.state = {
             user: {
@@ -30,6 +27,7 @@ class App extends Component
             tags: ["Untagged", "Grocery", "Important", "Passwords", "To-Do"],
             notes: [],
             newNoteModalOpen: false,
+            reload: false,
         };
     }
 
@@ -47,6 +45,10 @@ class App extends Component
             editing: false,
             openMenu: false,
             notes: [],
+            status: {
+                visible: [],
+                selected: [],
+            },
             newNoteModalOpen: false,
         });
     }
@@ -55,7 +57,14 @@ class App extends Component
     {
         if (prevState.validUser !== this.state.validUser)
             if (!this.state.validUser) // logged out
-                this.resetState(); 
+                this.resetState();
+    }
+
+    reloadNotes = () =>
+    {
+        this.setState({
+            reload: !this.state.reload,
+        });
     }
 
     handleLogin = (data) =>
@@ -78,9 +87,11 @@ class App extends Component
 
     handleLoadNotes = (notes) =>
     {
+        let select = null;
         let noteList = [];
         notes.forEach(n =>
         {
+            
             let note =
             {
                 id: n.id,
@@ -88,52 +99,34 @@ class App extends Component
                 title: n.title,
                 content: n.content,
                 tag: n.tag,
-                visible: true,
             }
             noteList.push(note);
+            if (this.state.selectedNote !== null)
+                if (this.state.selectedNote.id === n.id)
+                {
+                    select = note;
+                }
         });
 
         this.setState({
             notes: noteList,
+            selectedNote: select,
         });
     }
 
-    handleClickNote = (note) =>
+    handleSelectNote = (note) =>
     {
-        if (this.state.selectedNote !== null && this.state.selectedNote.title === "")
-        {
-            alert("You must give this note a title!");
-            return;
-        }
+        console.log(note);
+        console.log(this.state.notes);
 
-        let notes = this.state.notes.map(n =>
+        let selected = (note === null) ? null : this.state.notes.filter(n =>
         {
-            // turn off currently selected
-            if (n.id !== note.id)
-                n.selected = false;
-            else if (n.id === note.id)
-                n.selected = !n.selected;
-            return n;
+            return note.id === n.id;
+        })[0];
+
+        this.setState({
+            selectedNote: selected,
         });
-
-        // clicked when already selected
-        if (!note.selected) 
-        {
-            // deselect the note
-            this.setState({
-                notes: notes,
-                selectedNote: null,
-            });
-        }
-        // clicked when not selected
-        else
-        {
-            // select the note
-            this.setState({
-                notes: notes,
-                selectedNote: note,
-            });
-        }
     }
 
     openNewNoteModal = () =>
@@ -171,34 +164,33 @@ class App extends Component
         });
     };
 
-    deleteNote = (note) =>
+    updateNote = (data, note) =>
     {
-        let notes = this.state.notes.filter(n =>
-        {
-            return n.id !== note.id;
-        });
+        const url = "api/update-note/" + note.id + "/";
 
-        this.setState({
-            notes: notes,
-            selectedNote: null,
-        });
-    }
-
-    editTag = (tag, note) =>
-    {
-        let notes = this.state.notes.map(n =>
-        {
-            if (n.id === note.id)
+        fetch(url,
             {
-                if (tag !== "Untagged")
-                    n.tag = tag;
-            }
-            return n;
-        });
-
-        this.setState({
-            notes: notes,
-        });
+                withCredentials: true,
+                credentials: 'include',
+                method: 'PATCH',
+                headers: {
+                    'Authorization': ('Token ' + this.state.user.token),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response =>
+            {
+                if (response.status >= 400)
+                {
+                    alert("We could not update the note. Please try again.");
+                    return false;
+                }
+                else
+                {
+                    this.reloadNotes();
+                }
+            })
     }
 
     filterTags = (tags) =>
@@ -265,22 +257,25 @@ class App extends Component
         });
     }
 
+    
     render()
     {
         const content = this.state.validUser ?
-            <Home handleLoadNotes={ this.handleLoadNotes } handleClickNote={ this.handleClickNote } deleteNote={ this.deleteNote }
-                editTitle={ this.editTitle } editNote={ this.editNote } editTag={ this.editTag } notes={ this.state.notes } tags={ this.state.tags }
-                note={ this.state.selectedNote } user={ this.state.user } newNoteModalOpen={ this.state.newNoteModalOpen } openNewNoteModal={ this.openNewNoteModal } />
-            : <Login handleLogin={ this.handleLogin } />;
+            <Home user={ this.state.user } tags={ this.state.tags } notes={ this.state.notes } note={ this.state.selectedNote }
+                reload={ this.state.reload } newNoteModalOpen={ this.state.newNoteModalOpen } openNewNoteModal={ this.openNewNoteModal }
+                initializeStatus={ this.initializeStatus } editTitle={ this.editTitle } editNote={ this.editNote } updateNote={ this.updateNote }
+                reloadNotes={ this.reloadNotes } handleLoadNotes={ this.handleLoadNotes } handleSelectNote={ this.handleSelectNote } />
+            :
+            <Login handleLogin={ this.handleLogin } />;
 
         return (
             <Grid container className='app-container' justify='center' alignItems='center'>
                 <Grid className='navbar-container' item sm={ 12 }>
                     <UserMenu openMenu={ this.state.openMenu } user={ this.state.user }
                         handleMenuOpen={ this.handleMenuOpen } handleLogout={ this.handleLogout } />
-                    <NavBar validated={ this.state.validUser } notes={ this.props.notes } note={ this.state.selectedNote }
-                        tags={ this.state.tags } openNewNoteModal={ this.openNewNoteModal } editTag={ this.editTag }
-                        sortNotes={ this.sortNotes } filterTags={ this.filterTags } openMenu={ this.handleMenuOpen } />
+                    <NavBar validated={ this.state.validUser } tags={ this.state.tags } notes={ this.state.notes } note={ this.state.selectedNote }
+                        openNewNoteModal={ this.openNewNoteModal } updateNote={ this.updateNote }
+                        sortNotes={ this.sortNotes } filterTags={ this.filterTags } reloadNotes={ this.reloadNotes } openMenu={ this.handleMenuOpen } />
                 </Grid>
                 { content }
             </Grid>
@@ -289,50 +284,3 @@ class App extends Component
 }
 
 export default App;
-
-/*{
-                    visible: true,
-                    id: 1,
-                    title: "Okay bb",
-                    content: "random dshsahjkghj",
-                    date: date,
-                    tag: "Grocery",
-                    selected: false,
-                },
-                {
-                    visible: true,
-                    id: 2,
-                    title: "I wanna die",
-                    content: "hsajkjkah dshsahjkghj",
-                    date: date,
-                    tag: "",
-                    selected: false,
-                },
-                {
-                    visible: true,
-                    id: 3,
-                    title: "Note",
-                    content: "I need to work on the stupid database stuff omg lolol",
-                    date: date,
-                    tag: "To-Do",
-                    selected: false,
-                },
-                {
-                    visible: true,
-                    id: 4,
-                    title: "hello",
-                    content: "the mooooooooooooooooooooooooooooooooooodddd is weird because hgjskgdhakhakaahljkhagdlasbnhdksabhlbdfgkjabdhkl",
-                    date: date,
-                    tag: "Important",
-                    selected: false,
-                },
-                {
-                    visible: true,
-                    id: 5,
-                    title: "Take Into Account All of the..fghjkhsfdgyuiaabfvghbjnkmb",
-                    content: "ok dscfaghjks vgyisdhjlakl vghjelk 762189 veygbhjngbhnjm",
-                    date: date,
-                    tag: "Passwords",
-                    selected: false,
-                },
-            ]*/

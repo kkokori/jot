@@ -29,6 +29,7 @@ class NoteDetail extends Component
             noteSelected: false,
             editTitle: false,
             noteid: "",
+            tag: "",
         }
     }
 
@@ -37,24 +38,39 @@ class NoteDetail extends Component
         if (prevProps.note !== this.props.note)
         {
             let noteid = "";
+            let tag = "";
             if (this.props.note !== null)
+            {
                 noteid = this.props.note.id;
+                tag = this.props.note.tag;
+            }
 
             this.setState({
                 noteSelected: this.props.note !== null,
                 editTitle: false,
                 noteid: noteid,
+                tag: tag,
             });
         }
     }
 
+
+
     saveTitle = (e) =>
     {
         if (e.code === "Enter" || e.type === "click")
+        {
+            console.log(e)
+            let title = e.target.value;
+            const data = { title: title };
+
+            this.props.updateNote(data, this.props.note);
             this.setState({
                 editTitle: false,
             });
+        }
     }
+
 
     handleOpenConfirm = () =>
     {
@@ -66,7 +82,7 @@ class NoteDetail extends Component
     handleDeleteNote = () => 
     {
         this.handleOpenConfirm();
-        const url = "api/delete-note/" + this.state.noteid;
+        const url = "api/delete-note/" + this.state.noteid + "/";
         fetch(url,
             {
                 withCredentials: true,
@@ -86,14 +102,58 @@ class NoteDetail extends Component
                 }
                 else
                 {
-                    this.props.updateNotes();
+                    this.props.reloadNotes();
                     this.props.handleClickNote(this.props.note);
                     this.setState({
                         noteSelected: false,
                         noteid: "",
+                        tag: "",
                     });
                 }
             })
+    }
+
+    handleTagSelect = (tag) => 
+    {
+        let val = (tag === "Untagged") ? "" : tag;
+        const data = {
+            tag: val,
+        }
+
+        let note = this.props.note;
+        note.tag = val;
+
+        this.props.updateDisplayNote(note);
+        this.props.updateNote(data, this.props.note);
+    }
+
+    handleTitleChange = (title) =>
+    {
+        if (title === "")
+            return;
+
+        const data = {
+            title: title,
+        }
+
+        let note = this.props.note;
+        note.title = title;
+
+        this.props.updateDisplayNote(note);
+        //this.props.updateNote(data, this.props.note);
+    }
+
+    handleContentChange = (content) =>
+    {
+        const data = {
+            content: content,
+        }
+
+        let note = this.props.note;
+        note.content = content;
+
+        this.props.updateDisplayNote(note);
+        this.props.updateNote(data, this.props.note)
     }
 
     render()
@@ -106,12 +166,12 @@ class NoteDetail extends Component
         if (this.props.note !== null)
         {
             content = <TextField className="note-content" multiline variant="outlined" rows={ 26 } rowsMax={ 26 }
-                value={ this.props.note.content } onChange={ (e) => this.props.editNote(e.target.value, this.props.note) } />
+                value={ this.props.note.content } onChange={ (e) => this.handleContentChange(e.target.value) } />
 
             title = (this.state.editTitle || this.props.note.title == "") ?
                 <div>
                     <TextField required className="note-title" id={ "note-" + this.props.id + "-title" } value={ this.props.note.title }
-                        onChange={ (e) => this.props.editTitle(e.target.value, this.props.note) } onKeyDown={ (e) => this.saveTitle(e) } />
+                        onChange={ (e) => this.handleTitleChange(e.target.value) } onKeyDown={ (e) => this.saveTitle(e) } />
                     <IconButton edge="end" size="small" disabled={ !this.state.noteSelected }
                         onClick={ (e) => this.saveTitle(e) }>
                         <SaveIcon />
@@ -121,7 +181,7 @@ class NoteDetail extends Component
 
             subheader = this.props.note.date.format("MM-DD-YYYY hh:mmA");
             tag = (this.props.note.tag !== "") ?
-                <Chip label={ this.props.note.tag } size='medium' variant='outlined' onDelete={ () => this.props.editTag("", this.props.note) } /> : null;
+                <Chip label={ this.props.note.tag } size='medium' variant='outlined' onDelete={ () => this.handleTagSelect("Untagged") } /> : null;
         }
 
         return (
@@ -142,7 +202,7 @@ class NoteDetail extends Component
                     action={
                         <div>
                             { tag }
-                            <IconButton edge="end" size="large" disabled={ !this.state.noteSelected }
+                            <IconButton edge="end" size="medium" disabled={ !this.state.noteSelected }
                                 onClick={ this.handleOpenConfirm }>
                                 <DeleteIcon />
                             </IconButton>
